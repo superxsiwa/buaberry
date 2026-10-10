@@ -1,10 +1,14 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === "production";
+const repoName = "buaberry_web";
+
 const nextConfig = {
-  output: "export", // ส่งออกเป็น Static HTML รันบน GitHub Pages ได้ 100%
+  output: "export",
   images: {
-    unoptimized: true, // ปิด image optimization server เพื่อให้ deploy บน GitHub Pages ได้
+    unoptimized: true,
   },
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
+  // เมื่อรันบน GitHub Pages (URL จะมีชื่อ repo: /buaberry_web)
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || (isProd ? `/${repoName}` : ""),
 };
 
 export default nextConfig;
