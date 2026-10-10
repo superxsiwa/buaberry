@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🥐 BuaBerry Web (บัวเบอร์รี่)
 
-## Getting Started
+เว็บสั่งอาหาร & เบเกอรีโฮมเมดสำหรับร้าน **BuaBerry** รองรับการโฮสต์บน **GitHub Pages** (Static Export) แบบ 100% ฟรี ไม่มีค่าเซิร์ฟเวอร์
 
-First, run the development server:
+---
+
+## 🌟 ฟีเจอร์เด่น
+1. **รองรับ 3 โหมดการขายหลัก:**
+   - 🌅 **รอบหน้าร้านเช้าตรู่ (05:00 - 09:10 น.):** แซนวิชไส้ทะลัก ซาลาเปา ขนมจีบ สั่งล่วงหน้าแล้วแวะรับได้เลย
+   - 📅 **Pre-order / ขนมจัดเบรก:** เค้กกล้วยหอม บราวนี่ ขนมปัง สั่งล่วงหน้าสำหรับประชุม/สัมมนา
+   - 📦 **สั่งราคาส่ง (B2B):** เรทส่งสำหรับร้านค้าในมหาลัย โรงเรียน และร้านขายน้ำ (มีกำไรดี ขั้นต่ำน้อย)
+2. **ระบบตะกร้าสินค้า & Checkout:**
+   - คำนวณราคาอัตโนมัติตามโหมด (ราคาปลีกปกติ vs ราคาส่ง)
+   - ฟอร์มกรอกชื่อ เบอร์โทร เวลานัดรับ สถานที่จัดส่ง
+   - รองรับโอนเงิน PromptPay QR และเงินสด
+3. **ส่งออเดอร์เข้า LINE ร้านทันที (Direct LINE Integration):**
+   - ลูกค้ากดสั่งซื้อปุ๊บ ระบบจะจัดฟอร์แมตข้อความสรุปออเดอร์ทั้งหมด ส่งเข้าแชท LINE ร้านทันที ไม่ต้องมี backend ฐานข้อมูลให้ยุ่งยาก
+4. **Deploy ขึ้น GitHub Pages ได้ทันที:**
+   - มีไฟล์ GitHub Action CI/CD `.github/workflows/deploy.yml` เตรียมไว้ให้ เพียง push ขึ้น GitHub ก็ขึ้นหน้าเว็บออนไลน์ทันที
+
+---
+
+## 🛠 วิธีรันในเครื่อง (Local Development)
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+เปิดบราวเซอร์ที่: `http://localhost:3030`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🚀 วิธี Build สำหรับ GitHub Pages
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+```
+ไฟล์ Static HTML ทั้งหมดจะถูกสร้างไว้ในโฟลเดอร์ `out/` พร้อมนำไปอัปโหลดหรือให้ GitHub Action ดีพลอยได้ทันที

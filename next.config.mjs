@@ -1,16 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
+  output: "export", // ส่งออกเป็น Static HTML รันบน GitHub Pages ได้ 100%
+  images: {
+    unoptimized: true, // ปิด image optimization server เพื่อให้ deploy บน GitHub Pages ได้
   },
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
 };
 
 export default nextConfig;
