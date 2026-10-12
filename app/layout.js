@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SmartAssistant from "@/components/SmartAssistant";
 import { CartProvider } from "@/lib/CartContext";
 import { StoreProvider } from "@/lib/StoreContext";
 import "./globals.css";
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
             <Navbar />
             <main className="flex-1">{children}</main>
             <Footer />
+            <SmartAssistant />
           </CartProvider>
         </StoreProvider>
       </body>
