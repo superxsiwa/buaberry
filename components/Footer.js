@@ -68,8 +68,11 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 mt-8 pt-6 border-t border-amber-900/60 text-center text-xs text-amber-400/60">
-        © {new Date().getFullYear()} {SHOP_INFO.name}. All rights reserved.
+      <div className="max-w-6xl mx-auto px-4 mt-8 pt-6 border-t border-amber-900/60 flex flex-col sm:flex-row items-center justify-between text-xs text-amber-400/60 gap-2">
+        <p>© {new Date().getFullYear()} {SHOP_INFO.name}. All rights reserved.</p>
+        <a href="/admin" className="hover:text-amber-300 transition-colors flex items-center gap-1 opacity-70 hover:opacity-100">
+          🔒 ระบบจัดการหลังบ้าน
+        </a>
       </div>
     </footer>
   );

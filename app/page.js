@@ -3,23 +3,33 @@
 import { useState } from "react";
 import OrderTypeSelector from "@/components/OrderTypeSelector";
 import ProductCard from "@/components/ProductCard";
-import { CATEGORIES, PRODUCTS, SHOP_INFO } from "@/lib/products";
+import { CATEGORIES } from "@/lib/products";
 import { useCart } from "@/lib/CartContext";
-import { Phone, MessageCircle, Clock, ShoppingBag, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { useStore } from "@/lib/StoreContext";
+import { Phone, MessageCircle, ShoppingBag, Sparkles, CheckCircle2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { orderType } = useCart();
+  const { products, shopInfo, isOpen } = useStore();
 
   // กรองสินค้าตามหมวดหมู่
-  const filteredProducts = PRODUCTS.filter((item) => {
+  const filteredProducts = products.filter((item) => {
     if (selectedCategory === "all") return true;
     return item.category === selectedCategory;
   });
 
   return (
     <div className="space-y-12 pb-16">
+      {/* แจ้งเตือนถ้าร้านปิดรับออเดอร์ชั่วคราว */}
+      {!isOpen && (
+        <div className="bg-rose-500 text-white text-sm py-2.5 px-4 text-center font-bold flex items-center justify-center gap-2 shadow-sm">
+          <AlertCircle className="w-5 h-5 shrink-0" />
+          <span>ขณะนี้ร้านปิดรับออเดอร์ชั่วคราว แต่สามารถดูเมนูล่วงหน้าได้ครับ</span>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-amber-100/60 via-amber-50/40 to-transparent py-12 md:py-16 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
@@ -38,7 +48,7 @@ export default function Home() {
             </h1>
 
             <p className="text-stone-600 text-sm sm:text-base max-w-xl mx-auto md:mx-0 leading-relaxed">
-              เสิร์ฟความอร่อยรอบเช้าตรู่ <strong>05:00 - 09:10 น.</strong> ทั้งแซนวิชไส้ทะลัก ซาลาเปา ขนมจีบนึ่งสด 
+              เสิร์ฟความอร่อยรอบเช้าตรู่ <strong>{shopInfo.morningHours}</strong> ทั้งแซนวิชไส้ทะลัก ซาลาเปา ขนมจีบนึ่งสด 
               และเบเกอรี่โฮมเมด เค้กกล้วยหอม บราวนี่ พร้อมรับออเดอร์จัดเบรก & ส่งร้านค้า
             </p>
 
@@ -52,7 +62,7 @@ export default function Home() {
               </a>
 
               <a
-                href={SHOP_INFO.lineUrl}
+                href={shopInfo.lineUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-sm transition-all active:scale-95 flex items-center gap-2"
@@ -62,7 +72,7 @@ export default function Home() {
               </a>
 
               <a
-                href={SHOP_INFO.grabUrl}
+                href={shopInfo.grabUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="bg-stone-800 hover:bg-stone-900 text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-sm transition-all active:scale-95 flex items-center gap-2"
@@ -79,8 +89,12 @@ export default function Home() {
                 <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">
                   Highlights
                 </span>
-                <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">
-                  เปิดรับออเดอร์
+                <span
+                  className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
+                    isOpen ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800"
+                  }`}
+                >
+                  {isOpen ? "เปิดรับออเดอร์" : "ปิดรับชั่วคราว"}
                 </span>
               </div>
 
@@ -88,7 +102,7 @@ export default function Home() {
                 <div className="flex items-center gap-3 p-2.5 rounded-xl bg-amber-50/50">
                   <span className="text-2xl">🥪</span>
                   <div className="text-xs">
-                    <p className="font-bold text-amber-950">รอบหน้าร้าน 05:00 - 09:10</p>
+                    <p className="font-bold text-amber-950">รอบหน้าร้าน {shopInfo.morningHours}</p>
                     <p className="text-stone-500">แซนวิชไส้ทะลัก ซาลาเปาร้อนๆ</p>
                   </div>
                 </div>
@@ -112,7 +126,7 @@ export default function Home() {
 
               <div className="pt-2 text-center">
                 <span className="text-[11px] text-stone-600">
-                  📍 {SHOP_INFO.address}
+                  📍 {shopInfo.address}
                 </span>
               </div>
             </div>
@@ -133,7 +147,7 @@ export default function Home() {
               Menu & Bakery
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-amber-950">
-              เมนูความอร่อยของ BuaBerry
+              เมนูความอร่อยของ {shopInfo.name}
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-stone-500">
@@ -177,8 +191,7 @@ export default function Home() {
               รับส่งร้านค้าในมหาลัย โรงเรียน และร้านขายน้ำ
             </h3>
             <p className="text-emerald-100/80 text-sm leading-relaxed">
-              เพิ่มรายได้ให้ร้านของคุณด้วยแซนวิชไส้แน่น ขนมจีบ ซาลาเปา และเบเกอรี่ขายง่าย 
-              แพ็กเกจจิ้งสะอาด ป้ายชัดเจน ขั้นต่ำต่อครั้งไม่สูง มีรอบส่งตรงเวลา
+              {shopInfo.wholesaleNote}
             </p>
             <ul className="space-y-2 text-xs sm:text-sm text-emerald-200">
               <li className="flex items-center gap-2">
@@ -197,7 +210,7 @@ export default function Home() {
 
             <div className="pt-2 flex flex-wrap gap-3">
               <a
-                href={SHOP_INFO.lineUrl}
+                href={shopInfo.lineUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2"
@@ -206,11 +219,11 @@ export default function Home() {
                 <span>ทักไลน์ปรึกษาเรทราคาส่ง</span>
               </a>
               <a
-                href={`tel:${SHOP_INFO.phone}`}
+                href={`tel:${shopInfo.phone}`}
                 className="bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2"
               >
                 <Phone className="w-4 h-4" />
-                <span>โทรคุย: {SHOP_INFO.phone}</span>
+                <span>โทรคุย: {shopInfo.phone}</span>
               </a>
             </div>
           </div>

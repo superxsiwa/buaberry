@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@/lib/CartContext";
-import { Plus, Check, Sparkles } from "lucide-react";
+import { Plus, Check, Sparkles, Ban } from "lucide-react";
 import { useState } from "react";
 
 export default function ProductCard({ product }) {
@@ -10,8 +10,10 @@ export default function ProductCard({ product }) {
 
   const isWholesale = orderType === "wholesale";
   const displayPrice = isWholesale ? product.wholesalePrice : product.price;
+  const isOutOfStock = product.isOutOfStock;
 
   const handleAdd = () => {
+    if (isOutOfStock) return;
     const qty = isWholesale ? (product.minWholesale || 5) : 1;
     addToCart(product, qty);
     setAdded(true);
@@ -19,19 +21,33 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-4 border border-amber-100/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
+    <div
+      className={`bg-white rounded-2xl p-4 border border-amber-100/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group ${
+        isOutOfStock ? "opacity-75" : ""
+      }`}
+    >
       <div>
         {/* รูปไอคอน / ภาพสินค้า */}
         <div className="relative w-full aspect-square bg-gradient-to-br from-amber-50 to-orange-50/50 rounded-xl flex items-center justify-center text-6xl select-none group-hover:scale-105 transition-transform duration-300">
           <span>{product.image}</span>
-          
+
+          {/* Badge ของหมด */}
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-stone-900/60 rounded-xl flex flex-col items-center justify-center text-white backdrop-blur-[2px]">
+              <Ban className="w-8 h-8 text-rose-400 mb-1" />
+              <span className="text-xs font-bold tracking-wider uppercase bg-rose-600 px-2.5 py-0.5 rounded-full">
+                สินค้าหมดวันนี้
+              </span>
+            </div>
+          )}
+
           {/* Badge แสดงประเภท */}
-          {product.isMorningItem && (
+          {!isOutOfStock && product.isMorningItem && (
             <span className="absolute top-2 left-2 bg-amber-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
               🌅 เช้าตรู่
             </span>
           )}
-          {isWholesale && product.wholesalePrice && (
+          {!isOutOfStock && isWholesale && product.wholesalePrice && (
             <span className="absolute top-2 right-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs flex items-center gap-0.5">
               <Sparkles className="w-2.5 h-2.5" /> ราคาส่ง
             </span>
@@ -49,14 +65,15 @@ export default function ProductCard({ product }) {
 
           {/* Tags */}
           <div className="flex flex-wrap gap-1 mt-2">
-            {product.tags.map((tag, i) => (
-              <span
-                key={i}
-                className="text-[11px] bg-amber-50 text-amber-800/80 px-2 py-0.5 rounded-md font-medium"
-              >
-                #{tag}
-              </span>
-            ))}
+            {product.tags &&
+              product.tags.map((tag, i) => (
+                <span
+                  key={i}
+                  className="text-[11px] bg-amber-50 text-amber-800/80 px-2 py-0.5 rounded-md font-medium"
+                >
+                  #{tag}
+                </span>
+              ))}
           </div>
         </div>
       </div>
@@ -77,28 +94,35 @@ export default function ProductCard({ product }) {
           )}
         </div>
 
-        <button
-          onClick={handleAdd}
-          className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-90 ${
-            added
-              ? "bg-emerald-600 text-white"
-              : "bg-amber-100 hover:bg-amber-500 text-amber-900 hover:text-white"
-          }`}
-        >
-          {added ? (
-            <>
-              <Check className="w-4 h-4" />
-              <span>ใส่แล้ว!</span>
-            </>
-          ) : (
-            <>
-              <Plus className="w-4 h-4" />
-              <span>{isWholesale ? `สั่งส่ง (${product.minWholesale}+)` : "ใส่ตะกร้า"}</span>
-            </>
-          )}
-        </button>
+        {isOutOfStock ? (
+          <span className="text-xs font-bold text-rose-500 bg-rose-50 px-3 py-1.5 rounded-xl border border-rose-200">
+            หมดชั่วคราว
+          </span>
+        ) : (
+          <button
+            onClick={handleAdd}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-90 ${
+              added
+                ? "bg-emerald-600 text-white"
+                : "bg-amber-100 hover:bg-amber-500 text-amber-900 hover:text-white"
+            }`}
+          >
+            {added ? (
+              <>
+                <Check className="w-4 h-4" />
+                <span>ใส่แล้ว!</span>
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4" />
+                <span>
+                  {isWholesale ? `สั่งส่ง (${product.minWholesale}+)` : "ใส่ตะกร้า"}
+                </span>
+              </>
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
 }
-

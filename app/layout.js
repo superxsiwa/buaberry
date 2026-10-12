@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/lib/CartContext";
+import { StoreProvider } from "@/lib/StoreContext";
 import "./globals.css";
 
 export const metadata = {
@@ -12,11 +13,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="th">
       <body className="min-h-screen flex flex-col antialiased">
-        <CartProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </CartProvider>
+        <StoreProvider>
+          <CartProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </CartProvider>
+        </StoreProvider>
       </body>
     </html>
   );
