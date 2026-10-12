@@ -1,13 +1,14 @@
 "use client";
 
 import { useCart } from "@/lib/CartContext";
-import { SHOP_INFO } from "@/lib/products";
+import { useStore } from "@/lib/StoreContext";
 import { Trash2, Plus, Minus, ArrowLeft, Send, CheckCircle, Clock, Calendar, Store, QrCode } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function CartPage() {
   const { cart, orderType, updateQuantity, removeFromCart, clearCart, totalItems, totalPrice, getItemPrice } = useCart();
+  const { shopInfo } = useStore();
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -281,8 +282,8 @@ export default function CartPage() {
               {/* ข้อมูลโอน PromptPay */}
               {paymentMethod === "promptpay" && (
                 <div className="mt-3 p-3 bg-amber-50 rounded-xl border border-amber-200/60 text-xs space-y-1">
-                  <p className="font-bold text-amber-900">พร้อมเพย์ร้าน: {SHOP_INFO.promptPayNumber}</p>
-                  <p className="text-[11px] text-amber-800">ชื่อบัญชี: {SHOP_INFO.promptPayName}</p>
+                  <p className="font-bold text-amber-900">พร้อมเพย์ร้าน: {shopInfo.promptPayNumber}</p>
+                  <p className="text-[11px] text-amber-800">ชื่อบัญชี: {shopInfo.promptPayName}</p>
                   <p className="text-[10px] text-stone-500">* สแกนจ่ายแล้วแนบสลิปในแชท LINE ได้เลยครับ</p>
                 </div>
               )}

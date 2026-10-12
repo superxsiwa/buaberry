@@ -2,17 +2,19 @@
 
 import Link from "next/link";
 import { useCart } from "@/lib/CartContext";
+import { useStore } from "@/lib/StoreContext";
 import { ShoppingBag, Clock, Phone, Sparkles } from "lucide-react";
 
 export default function Navbar() {
   const { totalItems, orderType } = useCart();
+  const { shopInfo } = useStore();
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-100 shadow-xs">
       {/* Top Banner แจ้งเตือนรอบเช้า */}
       <div className="bg-amber-600 text-white text-xs sm:text-sm py-1.5 px-4 text-center font-medium flex items-center justify-center gap-2">
         <Clock className="w-4 h-4 shrink-0 animate-pulse" />
-        <span>รอบหน้าร้านสดใหม่: 05:00 - 09:10 น. สั่งไว้ก่อนขับรถแวะมารับได้เลย!</span>
+        <span>รอบหน้าร้านสดใหม่: {shopInfo.morningHours} สั่งไว้ก่อนขับรถแวะมารับได้เลย!</span>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">

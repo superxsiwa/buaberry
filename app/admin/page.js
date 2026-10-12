@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useStore } from "@/lib/StoreContext";
 import { CATEGORIES } from "@/lib/products";
 import {
@@ -49,6 +49,11 @@ export default function AdminPage() {
   // State สำหรับฟอร์มร้านค้า
   const [shopForm, setShopForm] = useState(shopInfo);
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // อัปเดต shopForm เมื่อ shopInfo โหลดจาก localStorage เสร็จ
+  useEffect(() => {
+    setShopForm(shopInfo);
+  }, [shopInfo]);
 
   const handleLogin = (e) => {
     e.preventDefault();
