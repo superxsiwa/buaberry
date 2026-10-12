@@ -122,8 +122,12 @@ export default function CartPage() {
               const price = getItemPrice(item);
               return (
                 <div key={item.id} className="py-4 first:pt-0 last:pb-0 flex items-center gap-4">
-                  <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl shrink-0">
-                    {item.image}
+                  <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl shrink-0 overflow-hidden">
+                    {item.image && (item.image.startsWith("data:image") || item.image.startsWith("http") || item.image.startsWith("/")) ? (
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span>{item.image || "🥐"}</span>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="font-bold text-sm text-amber-950 truncate">{item.name}</h4>

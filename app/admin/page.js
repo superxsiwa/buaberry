@@ -15,7 +15,8 @@ import {
   RotateCcw,
   Save,
   Download,
-  AlertTriangle,
+  Upload,
+  ImageIcon,
   ArrowLeft,
 } from "lucide-react";
 import Link from "next/link";
@@ -264,8 +265,12 @@ export default function AdminPage() {
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl shrink-0">
-                    {item.image}
+                  <div className="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl shrink-0 overflow-hidden">
+                    {item.image && (item.image.startsWith("data:image") || item.image.startsWith("http") || item.image.startsWith("/")) ? (
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span>{item.image || "🥐"}</span>
+                    )}
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
@@ -486,32 +491,97 @@ export default function AdminPage() {
             </div>
 
             <form onSubmit={handleSaveModal} className="space-y-4">
-              <div className="flex gap-3">
-                <div className="w-20">
-                  <label className="block text-xs font-bold text-stone-700 mb-1">ไอคอน/รูป</label>
-                  <input
-                    type="text"
-                    value={editingProduct.image}
-                    onChange={(e) =>
-                      setEditingProduct({ ...editingProduct, image: e.target.value })
-                    }
-                    className="w-full text-center text-xl px-2 py-2 rounded-xl border border-stone-200 focus:outline-none focus:border-amber-500"
-                  />
+              {/* อัปโหลดรูปขนม */}
+              <div>
+                <label className="block text-xs font-bold text-stone-700 mb-1.5">
+                  รูปภาพสินค้า / ขนม
+                </label>
+                <div className="flex items-center gap-3">
+                  <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-stone-200 flex items-center justify-center text-3xl overflow-hidden shrink-0 shadow-inner">
+                    {editingProduct.image &&
+                    (editingProduct.image.startsWith("data:image") ||
+                      editingProduct.image.startsWith("http") ||
+                      editingProduct.image.startsWith("/")) ? (
+                      <img
+                        src={editingProduct.image}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span>{editingProduct.image || "🥐"}</span>
+                    )}
+                  </div>
+
+                  <div className="flex-1 space-y-1.5">
+                    <label className="inline-flex items-center gap-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer transition-colors shadow-xs">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>เลือกรูปภาพจากเครื่อง</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              const img = new Image();
+                              img.onload = () => {
+                                // บีบอัดรูปขนาดพอดีๆ ไม่เกิน 600px เพื่อให้โหลดไวและเก็บใน local ได้
+                                const canvas = document.createElement("canvas");
+                                const maxDim = 600;
+                                let width = img.width;
+                                let height = img.height;
+                                if (width > height && width > maxDim) {
+                                  height = Math.round((height * maxDim) / width);
+                                  width = maxDim;
+                                } else if (height > maxDim) {
+                                  width = Math.round((width * maxDim) / height);
+                                  height = maxDim;
+                                }
+                                canvas.width = width;
+                                canvas.height = height;
+                                const ctx = canvas.getContext("2d");
+                                ctx.drawImage(img, 0, 0, width, height);
+                                const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+                                setEditingProduct({ ...editingProduct, image: dataUrl });
+                              };
+                              img.src = event.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-stone-400">หรือใช้อีโมจิ:</span>
+                      <input
+                        type="text"
+                        value={editingProduct.image?.startsWith("data:image") ? "" : editingProduct.image}
+                        placeholder="เช่น 🥪 🥟 🥐"
+                        onChange={(e) =>
+                          setEditingProduct({ ...editingProduct, image: e.target.value })
+                        }
+                        className="w-20 text-center text-xs px-2 py-1 rounded-lg border border-stone-200 focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <label className="block text-xs font-bold text-stone-700 mb-1">
-                    ชื่อสินค้า *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={editingProduct.name}
-                    onChange={(e) =>
-                      setEditingProduct({ ...editingProduct, name: e.target.value })
-                    }
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:border-amber-500"
-                  />
-                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-stone-700 mb-1">
+                  ชื่อสินค้า *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editingProduct.name}
+                  onChange={(e) =>
+                    setEditingProduct({ ...editingProduct, name: e.target.value })
+                  }
+                  className="w-full text-xs px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:border-amber-500"
+                />
               </div>
 
               <div>
@@ -612,3 +682,4 @@ export default function AdminPage() {
     </div>
   );
 }
+

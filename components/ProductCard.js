@@ -12,6 +12,12 @@ export default function ProductCard({ product }) {
   const displayPrice = isWholesale ? product.wholesalePrice : product.price;
   const isOutOfStock = product.isOutOfStock;
 
+  const isImageSrc =
+    product.image &&
+    (product.image.startsWith("data:image") ||
+      product.image.startsWith("http") ||
+      product.image.startsWith("/"));
+
   const handleAdd = () => {
     if (isOutOfStock) return;
     const qty = isWholesale ? (product.minWholesale || 5) : 1;
@@ -22,18 +28,26 @@ export default function ProductCard({ product }) {
 
   return (
     <div
-      className={`bg-white rounded-2xl p-4 border border-amber-100/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group ${
+      className={`bg-white rounded-2xl p-4 border border-amber-100/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group overflow-hidden ${
         isOutOfStock ? "opacity-75" : ""
       }`}
     >
       <div>
-        {/* รูปไอคอน / ภาพสินค้า */}
-        <div className="relative w-full aspect-square bg-gradient-to-br from-amber-50 to-orange-50/50 rounded-xl flex items-center justify-center text-6xl select-none group-hover:scale-105 transition-transform duration-300">
-          <span>{product.image}</span>
+        {/* รูปสินค้า (รองรับทั้งรูปอัปโหลด base64, URL หรืออีโมจิ) */}
+        <div className="relative w-full aspect-square bg-gradient-to-br from-amber-50 to-orange-50/50 rounded-xl flex items-center justify-center overflow-hidden select-none group-hover:scale-[1.02] transition-transform duration-300">
+          {isImageSrc ? (
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <span className="text-6xl">{product.image || "🥐"}</span>
+          )}
 
           {/* Badge ของหมด */}
           {isOutOfStock && (
-            <div className="absolute inset-0 bg-stone-900/60 rounded-xl flex flex-col items-center justify-center text-white backdrop-blur-[2px]">
+            <div className="absolute inset-0 bg-stone-900/60 flex flex-col items-center justify-center text-white backdrop-blur-[2px] z-10">
               <Ban className="w-8 h-8 text-rose-400 mb-1" />
               <span className="text-xs font-bold tracking-wider uppercase bg-rose-600 px-2.5 py-0.5 rounded-full">
                 สินค้าหมดวันนี้
@@ -43,12 +57,12 @@ export default function ProductCard({ product }) {
 
           {/* Badge แสดงประเภท */}
           {!isOutOfStock && product.isMorningItem && (
-            <span className="absolute top-2 left-2 bg-amber-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+            <span className="absolute top-2 left-2 bg-amber-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs z-10">
               🌅 เช้าตรู่
             </span>
           )}
           {!isOutOfStock && isWholesale && product.wholesalePrice && (
-            <span className="absolute top-2 right-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs flex items-center gap-0.5">
+            <span className="absolute top-2 right-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs flex items-center gap-0.5 z-10">
               <Sparkles className="w-2.5 h-2.5" /> ราคาส่ง
             </span>
           )}
@@ -56,7 +70,7 @@ export default function ProductCard({ product }) {
 
         {/* รายละเอียด */}
         <div className="mt-3">
-          <h3 className="font-bold text-amber-950 text-base leading-snug group-hover:text-amber-700 transition-colors">
+          <h3 className="font-bold text-amber-950 text-base leading-snug group-hover:text-amber-700 transition-colors line-clamp-1">
             {product.name}
           </h3>
           <p className="text-xs text-amber-900/60 line-clamp-2 mt-1 leading-relaxed">
