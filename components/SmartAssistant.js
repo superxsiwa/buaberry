@@ -28,7 +28,7 @@ export default function SmartAssistant() {
     {
       id: 1,
       sender: "ai",
-      text: `สวัสดีครับ! ผมคือ "น้องบัวเบอร์รี่" 🥐 ผู้ช่วยดูแลความอร่อยประจำร้าน วันนี้อยากทานอะไร หรืออยากให้ช่วยแนะนำเซ็ตไหน ถามผมได้เลยนะครับ!`,
+      text: `สวัสดีครับ! ผมคือ "น้องบัว" 🥐 ผู้ช่วยดูแลความอร่อยประจำร้าน วันนี้อยากทานอะไร หรืออยากให้ช่วยแนะนำเซ็ตไหน ถามผมได้เลยนะครับ!`,
     },
   ]);
 
@@ -62,7 +62,7 @@ export default function SmartAssistant() {
       recommendedProducts = products.filter(
         (p) => !p.isOutOfStock && p.price <= 50 && (p.isMorningItem || p.category === "sandwich" || p.category === "dimsum")
       );
-      replyText = `สำหรับมื้อเช้าเร็วๆ งบสบายกระเป๋า น้องบัวเบอร์รี่ขอแนะนำเมนูนี้เลยครับ ไส้แน่น นึ่งสด อิ่มคุ้มพร้อมเริ่มวันใหม่ทันที!`;
+      replyText = `สำหรับมื้อเช้าเร็วๆ งบสบายกระเป๋า น้องบัวขอแนะนำเมนูนี้เลยครับ ไส้แน่น นึ่งสด อิ่มคุ้มพร้อมเริ่มวันใหม่ทันที!`;
     }
     // 2. ของหวาน / กาแฟ / บราวนี่ / เค้กกล้วยหอม
     else if (text.includes("ของหวาน") || text.includes("กาแฟ") || text.includes("เค้ก") || text.includes("บราวนี่") || text.includes("กล้วย")) {
@@ -114,9 +114,9 @@ export default function SmartAssistant() {
       );
 
       if (recommendedProducts.length > 0) {
-        replyText = `น้องบัวเบอร์รี่พบเมนูที่น่าจะตรงใจคุณลูกค้าตามนี้ครับ:`;
+        replyText = `น้องบัวพบเมนูที่น่าจะตรงใจคุณลูกค้าตามนี้ครับ:`;
       } else {
-        replyText = `น้องบัวเบอร์รี่ยังไม่แน่ใจในเมนูนี้ แต่คุณลูกค้าสามารถเลือกดูเมนูทั้งหมด หรือแอดไลน์คุยกับพี่เจ้าของร้านโดยตรงได้เลยนะครับ 😊`;
+        replyText = `น้องบัวยังไม่แน่ใจในเมนูนี้ แต่คุณลูกค้าสามารถเลือกดูเมนูทั้งหมด หรือแอดไลน์คุยกับพี่เจ้าของร้านโดยตรงได้เลยนะครับ 😊`;
       }
     }
 
@@ -178,7 +178,7 @@ export default function SmartAssistant() {
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
           </div>
           <div className="hidden sm:block text-left">
-            <p className="text-xs font-bold leading-tight">ผู้ช่วยบัวเบอร์รี่</p>
+            <p className="text-xs font-bold leading-tight">น้องบัว 🥐</p>
             <p className="text-[10px] text-amber-100/90">แนะนำเมนู & จัดเบรก</p>
           </div>
         </button>
@@ -195,7 +195,7 @@ export default function SmartAssistant() {
               </div>
               <div>
                 <h3 className="text-sm font-bold leading-tight flex items-center gap-1.5">
-                  น้องบัวเบอร์รี่
+                  น้องบัว
                   <span className="text-[10px] bg-emerald-500/80 text-white px-1.5 py-0.2 rounded-full font-normal">
                     ออนไลน์
                   </span>
