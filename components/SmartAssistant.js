@@ -241,7 +241,20 @@ export default function SmartAssistant() {
                           className="bg-amber-50/60 rounded-xl p-2 flex items-center justify-between gap-2 border border-amber-200/50"
                         >
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className="text-xl shrink-0">{p.image || "🥐"}</span>
+                            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shrink-0 overflow-hidden border border-amber-200/60 shadow-2xs">
+                              {p.image &&
+                              (p.image.startsWith("data:image") ||
+                                p.image.startsWith("http") ||
+                                p.image.startsWith("/")) ? (
+                                <img
+                                  src={p.image}
+                                  alt={p.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <span className="text-base">{p.image || "🥐"}</span>
+                              )}
+                            </div>
                             <div className="min-w-0">
                               <p className="font-bold text-amber-950 truncate text-[11px]">
                                 {p.name}
@@ -318,3 +331,4 @@ export default function SmartAssistant() {
     </>
   );
 }
+
